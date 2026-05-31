@@ -1,44 +1,49 @@
 class Solution {
     public String minWindow(String s, String t) {
-        HashMap<Character, Integer> map = new HashMap<>();
 
-        for (int i = 0; i < t.length(); i++) {
-            char ch = t.charAt(i);
-            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        int[] freq = new int[128];
+
+        for (char ch : t.toCharArray()) {
+            freq[ch]++;
         }
+
         int left = 0;
-        int count = map.size();
-        int minlen = Integer.MAX_VALUE;
+        int required = t.length();
+
+        int minLen = Integer.MAX_VALUE;
         int start = 0;
 
         for (int right = 0; right < s.length(); right++) {
-            char ch = s.charAt(right);
-            if (map.containsKey(ch)) {
-                map.put(ch, map.getOrDefault(ch, 0) - 1);
 
-                if (map.get(ch) == 0) {
-                    count--;
-                }
+            char ch = s.charAt(right);
+
+            if (freq[ch] > 0) {
+                required--;
             }
 
-            while (count == 0) {
-                if (right - left + 1 < minlen) {
-                    minlen = right - left + 1;
+            freq[ch]--;
+
+            while (required == 0) {
+
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
                     start = left;
                 }
 
-                char leftchar = s.charAt(left);
-                if (map.containsKey(leftchar)) {
-                    map.put(leftchar, map.getOrDefault(leftchar, 0) + 1);
+                char leftChar = s.charAt(left);
 
-                    if (map.get(leftchar) == 1) {
-                        count++;
-                    }
+                freq[leftChar]++;
+
+                if (freq[leftChar] > 0) {
+                    required++;
                 }
+
                 left++;
             }
         }
 
-        return minlen == Integer.MAX_VALUE ? "" : s.substring(start, start + minlen);
+        return minLen == Integer.MAX_VALUE
+                ? ""
+                : s.substring(start, start + minLen);
     }
 }
