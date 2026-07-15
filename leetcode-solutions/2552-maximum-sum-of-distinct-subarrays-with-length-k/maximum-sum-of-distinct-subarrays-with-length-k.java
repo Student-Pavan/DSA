@@ -4,25 +4,27 @@ class Solution {
         long ans = 0;
         HashMap<Integer, Integer> map = new HashMap<>();
 
-        for (int i = 0; i < nums.length; i++) {
+        for(int right = 0 ; right < nums.length; right++){
+            sum += nums[right];
 
-            map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
-            sum += nums[i];
+            map.put(nums[right],map.getOrDefault(nums[right] , 0) + 1);
 
-            if (i >= k) {
-                sum -= nums[i - k];
 
-                map.put(nums[i - k], map.get(nums[i - k]) - 1);
+            if( right >= k){
+                sum -= nums[right - k];
 
-                if (map.get(nums[i - k]) == 0) {
-                    map.remove(nums[i - k]);
-                }
+                map.put(nums[right - k],map.getOrDefault(nums[right - k] , 0) - 1);
+
+                if(map.get(nums[right - k]) == 0)
+                    map.remove(nums[right - k]);
+                
+                
             }
 
-            if (i >= k - 1 && map.size() == k) {
-                ans = Math.max(ans, sum);
-            }
+            if( right >= k - 1 && map.size() == k)
+                ans = Math.max(ans,sum);
         }
+        
         return ans;
     }
 }
