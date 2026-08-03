@@ -1,49 +1,41 @@
 class Solution {
     public String minWindow(String s, String t) {
 
-        int[] freq = new int[128];
+        HashMap<Character, Integer> map = new HashMap<>();
 
-        for (char ch : t.toCharArray()) {
-            freq[ch]++;
-        }
+        for (char ch : t.toCharArray())
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
 
-        int left = 0;
-        int required = t.length();
-
-        int minLen = Integer.MAX_VALUE;
+        int count = map.size();
+        int minlen = Integer.MAX_VALUE;
         int start = 0;
+        int left = 0;
 
         for (int right = 0; right < s.length(); right++) {
-
             char ch = s.charAt(right);
+            map.put(ch, map.getOrDefault(ch, 0) - 1);
 
-            if (freq[ch] > 0) {
-                required--;
-            }
+            if (map.get(ch) == 0)
+                count--;
 
-            freq[ch]--;
-
-            while (required == 0) {
-
-                if (right - left + 1 < minLen) {
-                    minLen = right - left + 1;
+            while (count == 0) {
+                if (right - left + 1 < minlen) {
+                    minlen = right - left + 1;
                     start = left;
                 }
 
-                char leftChar = s.charAt(left);
+                char leftchar = s.charAt(left);
 
-                freq[leftChar]++;
+                if (map.containsKey(leftchar)) {
+                    map.put(leftchar, map.getOrDefault(leftchar, 0) + 1);
 
-                if (freq[leftChar] > 0) {
-                    required++;
+                    if (map.get(leftchar) > 0)
+                        count++;
                 }
-
                 left++;
             }
         }
 
-        return minLen == Integer.MAX_VALUE
-                ? ""
-                : s.substring(start, start + minLen);
+        return minlen == Integer.MAX_VALUE ? "" : s.substring(start, start + minlen);
     }
 }
