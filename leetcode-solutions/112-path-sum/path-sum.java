@@ -13,24 +13,20 @@
  *     }
  * }
  */
-
 class Solution {
     public boolean hasPathSum(TreeNode root, int targetSum) {
-        return hasPathSum(root, targetSum, 0);
-    }
-
-    public boolean hasPathSum(TreeNode root, int targetSum, int sum) {
-        if (root == null)
+        if(root == null)
             return false;
 
-        sum += root.val;
+         targetSum -= root.val;
 
-        if (root.left == null && root.right == null) {
-            if (sum == targetSum)
+        if(root.left == null && root.right == null){
+            if(targetSum == 0)
                 return true;
         }
 
-        return hasPathSum(root.left, targetSum, sum)
-            || hasPathSum(root.right, targetSum, sum);
+        return hasPathSum(root.left ,targetSum) || hasPathSum(root.right,targetSum);
     }
+
+    
 }
